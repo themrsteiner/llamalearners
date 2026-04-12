@@ -1,0 +1,120 @@
+:root {
+  --stage-preview-width: 1280;
+  --stage-preview-height: 800;
+  --text: #60584d;
+  --text-h: #2f2417;
+  --bg: #d8cab7;
+  --surface: rgba(255, 252, 247, 0.96);
+  --border: rgba(128, 92, 57, 0.18);
+  --accent: #a35a2c;
+  --selection-fill: rgba(183, 102, 53, 0.14);
+  --selection-stroke: rgba(183, 102, 53, 0.72);
+  --selection-glow: rgba(183, 102, 53, 0.24);
+  --control-height: 1.9rem;
+  --control-radius: 12px;
+  --control-padding-y: 0.28rem;
+  --control-padding-x: 0.56rem;
+  --control-padding-x-wide: 0.68rem;
+  --control-font-size: 0.92rem;
+  --field-radius: 12px;
+  --field-padding-y: 0.56rem;
+  --field-padding-x: 0.72rem;
+  --shadow-button:
+    rgba(47, 36, 23, 0.22) 0 12px 18px -10px,
+    rgba(47, 36, 23, 0.18) 0 4px 8px -6px,
+    rgba(255, 255, 255, 0.28) 0 1px 0 inset;
+  --shadow-button-hover:
+    rgba(47, 36, 23, 0.3) 0 18px 24px -12px,
+    rgba(47, 36, 23, 0.22) 0 8px 12px -8px,
+    rgba(255, 255, 255, 0.32) 0 1px 0 inset;
+  --shadow-soft:
+    rgba(89, 58, 29, 0.12) 0 8px 14px -10px,
+    rgba(89, 58, 29, 0.1) 0 2px 6px -5px;
+  --shadow:
+    rgba(89, 58, 29, 0.16) 0 12px 22px -12px,
+    rgba(89, 58, 29, 0.12) 0 4px 10px -8px;
+  --shadow-deep:
+    rgba(89, 58, 29, 0.2) 0 18px 28px -14px,
+    rgba(89, 58, 29, 0.14) 0 6px 12px -8px;
+  --sans: 'Trebuchet MS', 'Gill Sans', 'Segoe UI', sans-serif;
+  --heading: Georgia, 'Times New Roman', serif;
+  --mono: ui-monospace, Consolas, monospace;
+  font: 18px/1.45 var(--sans);
+  letter-spacing: 0.18px;
+  color: var(--text);
+  background: var(--bg);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+  scrollbar-gutter: stable;
+  height: 100%;
+}
+
+#root {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  height: 100svh;
+  min-height: 100svh;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  height: 100%;
+  min-height: 100svh;
+  overflow: hidden;
+  scrollbar-gutter: stable;
+  background:
+    radial-gradient(circle at top, rgba(255, 241, 220, 0.32), transparent 32%),
+    linear-gradient(180deg, rgb(222, 210, 192), rgb(216, 202, 183)),
+    var(--bg);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--heading);
+  font-weight: 700;
+  color: var(--text-h);
+}
+
+h1 {
+  font-size: clamp(2.4rem, 5vw, 4.4rem);
+  line-height: 0.98;
+  letter-spacing: -0.04em;
+  margin: 0.35rem 0 1rem;
+}
+
+h2 {
+  font-size: clamp(1.55rem, 2.3vw, 2.15rem);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  margin: 0;
+}
+
+h3 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+p {
+  margin: 0;
+}
+
+strong {
+  color: var(--text-h);
+}

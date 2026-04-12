@@ -48,7 +48,7 @@ import {
   type WeekdayId,
 } from './types'
 
-const BUILD_LABEL = 'Alpha Build 0.1.425'
+const BUILD_LABEL = 'Alpha Build 0.1.426'
 const HISTORY_LIMIT = 40
 let youtubeApiPromise: Promise<unknown> | null = null
 const REFERENCE_STAGE_WIDTH = 1280

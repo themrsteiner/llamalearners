@@ -48,7 +48,11 @@ import {
   type WeekdayId,
 } from './types'
 
-const BUILD_LABEL = 'Alpha Build 0.1.426'
+const BUILD_LABEL =
+  typeof globalThis !== 'undefined' &&
+  typeof (globalThis as { LLAMA_BUILD_LABEL?: unknown }).LLAMA_BUILD_LABEL === 'string'
+    ? ((globalThis as { LLAMA_BUILD_LABEL?: string }).LLAMA_BUILD_LABEL ?? 'Alpha Build 0.1.432')
+    : 'Alpha Build 0.1.432'
 const HISTORY_LIMIT = 40
 let youtubeApiPromise: Promise<unknown> | null = null
 const REFERENCE_STAGE_WIDTH = 1280
@@ -6203,6 +6207,66 @@ function App() {
     })
   }
 
+  function addBottomBlockFromDayFlow(dayId: WeekdayId) {
+    const dayBlocks = sortBlocksByTime(schedule[dayId].blocks)
+    const defaultStart = '08:00'
+    const defaultEnd = '15:30'
+    const timelineEndMinutes = timeToMinutes(defaultEnd)
+
+    setBuilderDay(dayId)
+
+    if (dayBlocks.length === 0) {
+      const createdGapId = insertGapBlock(dayId, 0, defaultStart, defaultEnd)
+      if (createdGapId) {
+        setDayFlowExpandedGapId(createdGapId)
+      }
+      return
+    }
+
+    const lastBlock = dayBlocks[dayBlocks.length - 1]
+    const lastEndMinutes = timeToMinutes(lastBlock.endTime)
+    if (lastEndMinutes < timelineEndMinutes) {
+      const createdGapId = insertGapBlock(dayId, dayBlocks.length, lastBlock.endTime, defaultEnd)
+      if (createdGapId) {
+        setDayFlowExpandedGapId(createdGapId)
+      }
+      return
+    }
+
+    let createdBlockId: string | null = null
+    updateDayBlocks(dayId, (blocks, next) => {
+      const ordered = sortBlocksByTime(blocks)
+      if (ordered.length === 0) {
+        return false
+      }
+
+      const currentLast = ordered[ordered.length - 1]
+      const startMinutes = timeToMinutes(currentLast.endTime)
+      const endMinutes = Math.min(startMinutes + 30, 23 * 60 + 59)
+      if (endMinutes <= startMinutes) {
+        return false
+      }
+
+      const insertAt = blocks.length
+      const created = createNewBlock(dayId, insertAt, 'standard', next[dayId].stageElementDefaults)
+      created.startTime = minutesToTime(startMinutes)
+      created.endTime = minutesToTime(endMinutes)
+      created.title = 'New block'
+      created.color = 'sunrise'
+      createdBlockId = created.id
+      blocks.push(created)
+      blocks.splice(0, blocks.length, ...sortBlocksByTime(blocks))
+      return true
+    })
+
+    if (createdBlockId) {
+      applyBuilderBlockSelection(dayId, [createdBlockId], createdBlockId)
+      setDayFlowExpandedGapId(null)
+    } else {
+      showBuilderInteractionMessage('No additional time is available to add another block.')
+    }
+  }
+
   function extendAdjacentBlockIntoGap(dayId: WeekdayId, gapId: string, direction: 'previous' | 'next') {
     let didExtend = false
     updateDayBlocks(dayId, (blocks) => {
@@ -7819,8 +7883,13 @@ function App() {
                           >
                             {block.enabled ? 'Hide' : 'Show'}
                           </button>
-                          <button className="day-flow-block-chip day-flow-block-chip-danger" onClick={() => removeBlock(builderDay, block.id)} type="button">
-                            Remove
+                          <button
+                            className="day-flow-block-chip day-flow-block-chip-danger day-flow-block-chip-icon-only"
+                            onClick={() => removeBlock(builderDay, block.id)}
+                            type="button"
+                            aria-label="Remove block"
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
                           </button>
                         </>
                       )}
@@ -7829,23 +7898,16 @@ function App() {
                 </Fragment>
               )
             })}
-            {dayBlocks.length > 0 && timeToMinutes(dayBlocks[dayBlocks.length - 1].endTime) < timeToMinutes('15:30') && (
-              <button
-                aria-label="Create open time block"
-                className="day-flow-gap-insert day-flow-gap-insert-inline day-flow-gap-insert-icon"
-                data-gap-trigger="true"
-                onClick={() => {
-                  setBuilderDay(dayId)
-                  const createdGapId = insertGapBlock(dayId, dayBlocks.length, dayBlocks[dayBlocks.length - 1].endTime, '15:30')
-                  if (createdGapId) {
-                    setDayFlowExpandedGapId(createdGapId)
-                  }
-                }}
-                type="button"
-              >
-                +
-              </button>
-            )}
+            <button
+              aria-label="Create open time block"
+              className="day-flow-gap-insert day-flow-gap-insert-inline day-flow-gap-insert-icon day-flow-gap-insert-bottom"
+              data-gap-trigger="true"
+              onClick={() => addBottomBlockFromDayFlow(dayId)}
+              type="button"
+            >
+              <span aria-hidden="true">+</span>
+              <span>Add Block</span>
+            </button>
           </div>
         </div>
       </section>

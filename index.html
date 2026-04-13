@@ -9,6 +9,7 @@
       content="Llama Learners landing page. Choose the Classroom App or visit the Curriculum Store."
     />
     <link rel="stylesheet" href="/landing.css" />
+    <script src="/build-version.js"></script>
   </head>
   <body>
     <main class="landing">
@@ -55,6 +56,13 @@
         </a>
       </section>
     </main>
-    <p class="landing-build">Alpha Build 0.1.425</p>
+    <p class="landing-build" id="landing-build-label">Build</p>
+    <script>
+      (function () {
+        var label = window.LLAMA_BUILD_LABEL || 'Build'
+        var el = document.getElementById('landing-build-label')
+        if (el) el.textContent = label
+      })()
+    </script>
   </body>
 </html>

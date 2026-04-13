@@ -718,14 +718,13 @@
   align-content: start;
 }
 
-.day-flow-page {
-  min-height: 0;
-  align-content: start;
-}
+.day-flow-page { min-height: 0; }
 
 .day-flow-panel {
   display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
   gap: 0.6rem;
+  min-height: 0;
 }
 
 .day-flow-intro-row {
@@ -959,8 +958,11 @@
 
 .day-flow-folder-shell {
   display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
   gap: 0;
+  min-height: 0;
 }
+
 
 .day-flow-content-refresh .day-flow-detail-card-compact,
 .day-flow-content-refresh .day-flow-day-column {
@@ -969,12 +971,17 @@
 
 .day-flow-weekboard {
   display: grid;
-  align-items: start;
+  align-items: stretch;
+  min-height: 0;
+  overflow: hidden;
+  padding-right: 0;
 }
 
 .day-flow-activities-board {
   position: relative;
   min-height: 34rem;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .day-flow-activity-surface {
@@ -1064,6 +1071,8 @@
 
 .day-flow-day-column {
   display: grid;
+  grid-template-rows: auto;
+  align-content: start;
   gap: 0.6rem;  padding: 0.9rem;
   border-radius: 0 24px 24px 24px;
   border: 1px solid var(--day-flow-folder-border, rgba(108, 104, 98, 0.22));
@@ -1079,6 +1088,11 @@
     border-color 0.24s ease,
     box-shadow 0.28s ease,
     background 0.28s ease;
+  min-height: 0;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 0.55rem;
 }
 
 .day-flow-day-column-active {
@@ -1247,12 +1261,18 @@
 }
 
 .day-flow-timeline-shell {
-  min-height: 34rem;
+  min-height: 0;
+  height: 100%;
+}
+
+.day-flow-page .day-flow-timeline-shell {
+  height: auto;
 }
 
 .day-flow-week-list {
   opacity: 1;
   transform: none;
+  min-height: 0;
 }
 
 .day-flow-week-block-shell {
@@ -1729,6 +1749,22 @@
 
 .day-flow-gap-insert-inline {
   margin-block: 0.08rem;
+}
+
+.day-flow-gap-insert-bottom {
+  align-self: center;
+  width: auto;
+  min-width: 9.75rem;
+  min-height: 2rem;
+  padding: 0.24rem 0.82rem;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.42rem;
+  line-height: 1;
+  font-size: 0.9rem;
+  font-weight: 700;
 }
 
 .day-flow-gap-insert-icon:hover,
@@ -7443,4 +7479,5 @@
 .builder-block-strip .builder-block-thumb {
   align-self: center;
 }
+
 
